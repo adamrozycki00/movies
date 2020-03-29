@@ -3,7 +3,6 @@ package pl.adaroz.springboot2.homework6.aspect;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -20,9 +19,7 @@ public class MailSenderAspect {
     private String to;
 
     @Autowired
-    public MailSenderAspect(
-            @Qualifier("getJavaMailSender") JavaMailSender emailSender,
-            MovieService movieService) {
+    public MailSenderAspect(JavaMailSender emailSender, MovieService movieService) {
         this.emailSender = emailSender;
         this.movieService = movieService;
     }
