@@ -2,6 +2,8 @@ package pl.adaroz.springboot2.homework6.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pl.adaroz.springboot2.homework6.aspect.MailSenderAfterAddingMovie;
+import pl.adaroz.springboot2.homework6.aspect.MailSenderAspect;
 import pl.adaroz.springboot2.homework6.model.Movie;
 import pl.adaroz.springboot2.homework6.service.MovieService;
 
@@ -13,23 +15,29 @@ import java.util.List;
 @RequestMapping("/movies")
 public class MovieController {
 
-    private MovieService service;
+    private MovieService movieService;
+    private MailSenderAspect mailService;
 
     @Autowired
-    public MovieController(MovieService service) {
-        this.service = service;
+    public MovieController(MovieService movieService,
+                           MailSenderAspect mailService) {
+        this.movieService = movieService;
+        this.mailService = mailService;
     }
 
     @GetMapping("")
     public List<Movie> getMovies() {
-        return service.getMovies();
+        return movieService.getMovies();
     }
 
     @PostMapping("")
-    public void addMovie(@RequestBody Movie movie,
-                         @RequestHeader String email,
-                         HttpServletResponse response) throws IOException {
-        service.addMovie(movie, email);
+    @MailSenderAfterAddingMovie
+    public void addMovie(HttpServletResponse response,
+                         @RequestBody Movie movie,
+                         @RequestHeader String email
+                         ) throws IOException {
+        mailService.setTo(email);
+        movieService.addMovie(movie);
         response.sendRedirect("/movies");
     }
 
