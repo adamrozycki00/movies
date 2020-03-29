@@ -1,5 +1,6 @@
 package pl.adaroz.springboot2.homework6.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.adaroz.springboot2.homework6.model.Movie;
 
@@ -10,8 +11,12 @@ import java.util.List;
 public class MovieService {
 
     List<Movie> movies;
+    MailService mailService;
 
-    public MovieService() {
+    @Autowired
+    public MovieService(MailService mailService) {
+        this.mailService = mailService;
+
         movies = new ArrayList<>();
         movies.add(new Movie("Jaws", "Spielberg", 1975));
         movies.add(new Movie("Raiders of the Lost Ark", "Spielberg", 1981));
@@ -23,6 +28,9 @@ public class MovieService {
 
     public void addMovie(Movie movie) {
         movies.add(movie);
+        mailService.sendSimpleMessage("adamrozycki00@gmail.com",
+                "Your movie has been added",
+                "Title\nDirector\nYear");
     }
 
     public List<Movie> getMovies() {
