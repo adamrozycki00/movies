@@ -27,8 +27,9 @@ public class MovieController {
 
     @PostMapping("")
     public void addMovie(@RequestBody Movie movie,
+                         @RequestHeader String email,
                          HttpServletResponse response) throws IOException {
-        service.addMovie(movie);
+        service.addMovie(movie, email);
         response.sendRedirect("/movies");
     }
 
